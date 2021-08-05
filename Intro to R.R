@@ -1,11 +1,9 @@
 # install.packages("tidyverse")
-# library(tidyverse)
+library(tidyverse)
 
-# CTRL + SHIFT + C to comment multiple ines
+# CTRL + SHIFT + C to comment multiple lines (Windows)
 
 #We are going to work with the Starwars data set that is inbuilt in R
-
-starwars
 
 view(starwars)
 
@@ -14,11 +12,11 @@ view(starwars)
 
 data <- starwars
 
-#now the data set shows up int he environment with 87 observations of 14 variables
+#now the data set shows up in the environment with 87 observations of 14 variables
 
 view(data)
 
-#head andtail to see the first n lines or the last n lines of the dataset
+#head and tail to see the first n lines or the last n lines of the dataset
 
 head(data, 10)
 tail(data,15)
@@ -37,7 +35,12 @@ filter(data, homeworld == "Tatooine")
 
 
 filter(data, homeworld == "Tatooine", sex == "male")
+
 # This shows a tibble with the 6 male characters that were from Tatooine but has no effect on the original dataset
+
+
+
+
 
 # we can assign these observations to their own dataframe
 
@@ -50,6 +53,10 @@ male_tatooine <- filter(data, homeworld == "Tatooine", sex == "male")
 female_characters <- data %>%
   filter(sex == "female") %>%
   arrange(homeworld)
+
+data %>%
+  filter(species == "Human" & films =="Attack of the Clones" )
+
 
 # lets look at the tallest characters
 
