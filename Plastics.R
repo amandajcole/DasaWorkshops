@@ -58,3 +58,40 @@ count_company %>%
 
 company <- count_company %>%
   pivot_wider(names_from = year, values_from = n)
+
+#replace the NA's with 0's - why does this not work
+company$2019[is.na(company$2019)] <- 0
+
+company$'2019'[is.na(company$'2019')] <- 0
+company$'2020'[is.na(company$'2020')] <- 0
+
+
+company <-rename(company, yr2019='2019')
+company <-rename(company, yr2020='2020')
+
+company_dif <-company %>% mutate(difference = (yr2020-yr2019))
+
+view(company_dif)
+
+
+company_dif %>%
+  arrange(desc(difference))%>%
+  head(50)%>% 
+  ggplot(aes(difference, parent_company)) +
+  geom_point()
+
+company_dif %>%
+  arrange(difference)%>%
+  head(50)%>% 
+  ggplot(aes(difference, parent_company)) +
+  geom_point()
+
+
+# volunteers
+
+volunteers <- plastics %>%
+  group_by(country, year) %>%
+  distinct(country, year, volunteers)
+
+volunteers_by_year <- volunteers %>%
+  pivot_wider(names_from = year, values_from = volunteers)
