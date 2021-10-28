@@ -3,8 +3,14 @@
 library(tidyverse)
 library(skimr)
 library(ggplot2)
+#library(janitor)
 
-# The original dataset come from Break free from Plastic and was put together by Sarah Sauve. This was featured in Tidy Tuesday in January 2021.
+
+# The original dataset come from Break free from Plastic and was put together by 
+#Sarah Sauve. This was featured in Tidy Tuesday in January 2021.
+
+# https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-01-26/readme.md
+
 
 # read in the dataset
 plastics <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-26/plastics.csv')
@@ -12,13 +18,17 @@ plastics <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytues
 skim(plastics)
 
 
-# There are two columns as character and the rest are numeric, looking at the data there are some missing variables
-# and we need to work out how to use them. Do we replace them with zeros, or ignore them in the analysis. That depends on what question we are asking.
+# There are two columns as character and the rest are numeric, looking at the data
+# there are some missing variables
+# and we need to work out how to use them. 
+# Do we replace them with zeros, or ignore them in the analysis. 
+# That depends on what question we are asking.
 
 
 rename(plastics, other=o)
 
 view(plastics)
+
 
 plastics<-rename(plastics, other = o)
 view(plastics)
@@ -40,6 +50,14 @@ view(oz)
 count_country <- plastics %>%
   group_by(year) %>%
   count(country)
+
+# Count the number of events
+count_country %>% count(year)
+# add the filter for Australia or pick another country 
+# filter(country == "Australia") %>%
+
+count_country %>% tabyl(year)
+
 
 # plot count country
 ggplot(count_country, aes(n, country, colour = year))+
@@ -65,6 +83,7 @@ ggplot(count_country, aes(n, country, colour = year))+
 # with a shape?
 ggplot(count_country, aes(n, country, shape = year))+
   geom_point()
+
 
 # Lets look at the companies 
 count_company <- plastics %>%
@@ -122,6 +141,7 @@ volunteers <- plastics %>%
 
 view(volunteers)
 
+
 volunteers %>%
   ggplot(aes(country, volunteers, colour =year))+
   geom_point()+
@@ -158,6 +178,11 @@ volunteers_by_year <-rename(volunteers_by_year, yr2020='2020')
 
 view(volunteers_by_year)
 
+#look at the countries that only participated in one year
+country_participants <- volunteers_by_year %>% 
+  filter(is.na(yr2019) | is.na(yr2020)) 
+
+
 
 volunteers_dif <-volunteers_by_year %>% mutate(difference = (yr2020-yr2019))
 
@@ -190,3 +215,19 @@ volunteers_dif %>%
   ggplot(aes(x=difference, y=reorder(country,-difference))) +
    geom_point() +
    ggtitle("Countrys with a decrease in volunteers from 2019-2020")
+
+
+stats <- plastics %>% select(country, year, num_events, volunteers)%>%
+  distinct(country, year, num_events, volunteers) %>%
+  arrange(country)
+
+ggplot(stats, aes(country, volunteers, fill = year)) +
+  geom_bar(position="dodge2", stat = "identity", width = 0.7)+
+  coord_flip()
+
+  
+
+
+
+
+
