@@ -1,0 +1,114 @@
+---
+title: "ggplot2  28-10-2021"
+author: "Amanda"
+date: "28/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(skimr)
+```
+
+## load the data
+
+```{r}
+view(mpg)
+
+data(mpg)
+```
+
+#wrangling
+```{r}
+skim(mpg)
+?mpg
+```
+
+```{r}
+count(mpg, manufacturer, model, class)
+```
+
+# graphs
+
+```{r}
+mpg %>%
+  ggplot(aes(manufacturer, fill = manufacturer))+
+  geom_bar()+
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+
+```{r}
+mpg %>%
+  ggplot(aes(displ, hwy, colour = class)) + geom_point()
+
+mpg %>%
+  ggplot(aes(manufacturer, hwy, colour = class)) + geom_point() +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45))+
+  labs(x = "Car manufacturer", 
+       y = "Miles per gallon",
+       title = "Highway milage per manufacturer", 
+       caption = "source = mpg dataset") 
+
+mpg %>%
+  ggplot(aes(manufacturer, hwy, shape = class)) + geom_point() +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45))+
+  labs(x = "Car manufacturer", 
+       y = "Miles per gallon",
+       title = "Highway milage per manufacturer", 
+       caption = "source = mpg dataset") 
+```
+
+## facets
+
+```{r}
+mpg %>%
+  ggplot(aes(displ, cty)) +
+  geom_point() +
+  facet_wrap(~class, nrow = 4)
+```
+
+
+```{r}
+mpg %>%
+  ggplot(aes(displ, cty)) +
+  geom_point() +
+  facet_grid(drv~class)
+```
+
+```{r}
+mpg %>%
+  ggplot(aes(displ, cty, fill = class)) +
+  geom_point() +
+ geom_smooth(data = filter(mpg, class == "subcompact"))
+
+
+mpg %>%
+  ggplot(aes(displ, cty, colour = drv)) +
+  geom_point() +
+ geom_smooth(data = filter(mpg, drv == "f"))
+
+mpg %>%
+  ggplot(aes(displ, cty, colour = drv)) +
+  geom_point() +
+ geom_smooth(se = FALSE)
+
+mpg %>%
+  ggplot(aes(displ, cty, colour = fl)) +
+  geom_point() +
+ geom_smooth(se = FALSE)
+```
+
+```{r}
+
+mpg %>% 
+  ggplot(aes(displ, cty, colour = class)) +
+  geom_point()+
+  geom_hline(yintercept = 20, colour = "orange", size = 0.5)+
+  geom_vline(xintercept = 6, colour = "orange", size = 0.5)
+```
+
